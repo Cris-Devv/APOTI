@@ -37,6 +37,6 @@ Documentos que demonstram o fluxo do sistema e suas funcionalidades:
 
 Google Docs: https://docs.google.com/document/d/12A7ABgUwnqvFyMPQbxWQ-yBY78cBUI0X22TbbzM675c/edit?usp=sharing
 
-Miro: https://miro.com/app/board/uXjVGtLL93Y=/?share_link_id=389410618406
+Miro: [https://miro.com/app/board/uXjVGtLL93Y=/?share_link_id=389410618406](https://miro.com/app/live-embed/uXjVGtLL93Y=/?embedMode=view_only_without_ui&moveToViewport=-2462%2C-927%2C7475%2C3729&embedId=260253218362)
 
 ---
