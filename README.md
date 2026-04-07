@@ -28,8 +28,7 @@ Feito com amor por estudantes de **Análise e Desenvolvimento de Sistemas** da *
 ## 🌐 Funcionalidades
 
 ✅ Informações sobre multas (valor, hora/data, status de pagamento) <br>
-✅ Interface intuitiva <br>
-✅ Pagamento embutido no sistema <br>
+✅ Funções intuitivas <br>
 
 ## 🔗 Links
 
