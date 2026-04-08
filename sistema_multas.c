@@ -50,73 +50,73 @@ int proximo_id = 1;
 
 /* ===== PROTÓTIPOS ===== */
 
-void pausar();
-void menu_principal();
-void cadastrar_veiculo();
-void cadastrar_multa();
-void listar_multas();
-void buscar_por_placa();
-void buscar_por_cpf();
-void excluir_multa();
-void alterar_status();
-void salvar_arquivo();
-void carregar_arquivo();
-void exibir_multa(Multa m);
-int validar_cpf(const char *cpf);
-int validar_placa(const char *placa);
+void  pausar();
+void  menu_principal();
+void  cadastrar_veiculo();
+void  cadastrar_multa();
+void  listar_multas();
+void  buscar_por_placa();
+void  buscar_por_cpf();
+void  excluir_multa();
+void  alterar_status();
+void  salvar_arquivo();
+void  carregar_arquivo();
+void  exibir_multa(Multa m);
+int   validar_cpf(const char *cpf);
+int   validar_placa(const char *placa);
 
 /* ===== CADASTRO ===== */
 
-// void cadastrar_veiculo()
-// {
+// Cadastro de veículo
+void cadastrar_veiculo() {
 
-//     printf("=== CADASTRAR NOVO VEÍCULO ===\n\n");
+    printf("=== CADASTRAR NOVO VEÍCULO ===\n\n");
 
-//     if (totalV >= MAX_VEICULOS)
-//     {
-//         printf("ERRO: Limite maximo de %d veiculos atingido!\n", MAX_VEICULOS);
-//         pausar();
-//         return;
-//     }
+    if (totalV >= MAX_VEICULOS)
+    {
+        printf("ERRO: Limite maximo de %d veiculos atingido!\n", MAX_VEICULOS);
+        pausar();
+        return;
+    }
 
-//     Veiculo novo;
+    Veiculo novo;
 
-//     do {
-//         printf("Insira a placa do seu veiculo: ");
-//         fgets(novo.placa, STR, stdin);
-//         novo.placa[strcspn(novo.placa, "\n")] = 0;
+    do {
+        printf("Insira a placa do seu veiculo: ");
+        fgets(novo.placa, STR, stdin);
+        novo.placa[strcspn(novo.placa, "\n")] = 0;
         
-//         /* converte para maiusculo */
-//         for (int i = 0; novo.placa[i] != "\n"; i++) {
-//             novo.placa[i] = toupper(novo.placa[i]);
-//         }
+        /* converte para maiusculo */
+        for (int i = 0; novo.placa[i] != '\n'; i++) {
+            novo.placa[i] = toupper(novo.placa[i]);
+        }
 
-//         if (!validar_placa(novo.placa)) {
-//             printf("Placa invalida! Use o formato ABC1234.\n");
-//         }
+        if (!validar_placa(novo.placa)) {
+            printf("Placa invalida! Use o formato ABC1234.\n");
+        }
 
-//     } while (!validar_placa(novo.placa));
+    } while (!validar_placa(novo.placa));
 
-//     printf("Insira o modelo do seu carro: ");
-//     fgets(novo.modelo, STR, stdin);
-//     novo.modelo[strcspn(novo.modelo, "\n")] = 0;
-//     printf("Insira a cor do seu carro: ");
-//     fgets(novo.cor, STR, stdin);
-//     novo.cor[strcspn(novo.cor, "\n")] = 0;
-//     printf("Insira o ano do seu carro: ");
-//     scanf("%d", &novo.ano);
-//     getchar();
+    printf("Insira o modelo do seu carro: ");
+    fgets(novo.modelo, STR, stdin);
+    novo.modelo[strcspn(novo.modelo, "\n")] = 0;
+    printf("Insira a cor do seu carro: ");
+    fgets(novo.cor, STR, stdin);
+    novo.cor[strcspn(novo.cor, "\n")] = 0;
+    printf("Insira o ano do seu carro: ");
+    scanf("%d", &novo.ano);
+    getchar();
 
-//     veiculos[totalV] = novo;
-//     totalV++;
+    veiculos[totalV] = novo;
+    totalV++;
 
-//     salvar_arquivo();
-//     printf("\nVeiculo cadastrado com sucesso\n");
-//     pausar();
-// }
+    salvar_arquivo();
+    printf("\nVeiculo cadastrado com sucesso\n");
+    pausar();
+}
 
-void cadastrar_multa()
-{
+// Cadastro de multas
+void cadastrar_multa() {
 
     printf("=== CADASTRAR NOVA MULTA ===\n\n");
 
@@ -189,10 +189,10 @@ void cadastrar_multa()
     pausar();
 }
 
-/* ===== LISTAGEM ===== */
+/* ===== CONSULTA ===== */
 
-void listar_multas()
-{
+// Listagem de todas as multas de um carro
+void listar_multas() {
 
     printf("=== LISTA DE MULTAS ===\n\n");
 
@@ -214,10 +214,8 @@ void listar_multas()
     pausar();
 }
 
-/* ===== BUSCA POR PLACA ===== */
-
-void buscar_por_placa()
-{
+// Listagem por placa do carro
+void buscar_por_placa() {
 
     printf("=== BUSCAR POR PLACA ===\n\n");
 
@@ -248,10 +246,8 @@ void buscar_por_placa()
     pausar();
 }
 
-/* ===== BUSCA POR CPF ===== */
-
-void buscar_por_cpf()
-{
+// Listagem por CPF do infrator
+void buscar_por_cpf() {
 
     printf("=== BUSCAR POR CPF ===\n\n");
 
@@ -276,10 +272,10 @@ void buscar_por_cpf()
     pausar();
 }
 
-/* ===== ALTERAR STATUS ===== */
+/* ===== ATUALIZAR STATUS ===== */
 
-void alterar_status()
-{
+// Pagamento de multas
+void alterar_status() {
 
     printf("=== ALTERAR STATUS ===\n\n");
 
@@ -337,8 +333,8 @@ void alterar_status()
 
 /* ===== EXCLUSAO ===== */
 
-void excluir_multa()
-{
+// Exclusão de multa
+void excluir_multa() {
 
     printf("=== EXCLUIR MULTA ===\n\n");
 
@@ -394,8 +390,8 @@ void excluir_multa()
 
 /* ===== ARQUIVO ===== */
 
-void salvar_arquivo()
-{
+// Salva dados em arquivo
+void salvar_arquivo() {
     FILE *fp = fopen(ARQUIVO, "wb");
     if (!fp)
     {
@@ -409,8 +405,8 @@ void salvar_arquivo()
     printf("Dados salvos com sucesso!\n");
 }
 
-void carregar_arquivo()
-{
+// Carrega dados de um arquivo
+void carregar_arquivo() {
     FILE *fp = fopen(ARQUIVO, "rb");
     if (!fp)
     {
@@ -425,13 +421,9 @@ void carregar_arquivo()
 }
 
 /* ===== MENU PRINCIPAL ===== */
-
-void menu_principal()
-{
+void menu_principal() {
     int opcao;
-    do
-    {
-
+    do {
         printf("========================================\n");
         printf("   SISTEMA DE CADASTRO DE MULTAS v1.0  \n");
         printf("========================================\n\n");
@@ -445,46 +437,45 @@ void menu_principal()
         printf("Opcao: ");
         scanf(" %d", &opcao);
 
-        switch (opcao)
-        {
-        case 1:
-            cadastrar_multa();
-            break;
-        case 2:
-            listar_multas();
-            break;
-        case 3:
-            buscar_por_placa();
-            break;
-        case 4:
-            buscar_por_cpf();
-            break;
-        case 5:
-            excluir_multa();
-            break;
-        case 6:
-            alterar_status();
-            break;
-        case 0:
-            printf("\nSaindo... Ate logo!\n");
-            break;
-        default:
-            printf("\nOpcao invalida!\n");
-            pausar();
+        switch (opcao) {
+            case 1:
+                cadastrar_multa();
+                break;
+            case 2:
+                listar_multas();
+                break;
+            case 3:
+                buscar_por_placa();
+                break;
+            case 4:
+                buscar_por_cpf();
+                break;
+            case 5:
+                excluir_multa();
+                break;
+            case 6:
+                alterar_status();
+                break;
+            case 0:
+                printf("\nSaindo... Ate logo!\n");
+                break;
+            default:
+                printf("\nOpcao invalida!\n");
+                pausar();
         }
     } while (opcao != 0);
 }
 
 /* ===== FUNÇÕES UTILITÁRIAS ===== */
 
-void pausar()
-{
+// Função para pausar a aplicação
+void pausar() {
     printf("\nPressione ENTER para continuar...");
     getchar();
 }
 
-void exibir_multa(Multa m)
-{
+// Função para exibir os detalhes de uma multa de forma formatada
+void exibir_multa(Multa m) {
     printf("+-------------------------------------------------+\n");
     printf("| ID: %-5d                                       |\n", m.id);
     printf("+-------------------------------------------------+\n");
@@ -502,9 +493,8 @@ void exibir_multa(Multa m)
     printf("+-------------------------------------------------+\n");
 }
 
-/* Validação simples de CPF (apenas formato) */
-int validar_cpf(const char *cpf)
-{
+// Validação simples de CPF (apenas formato)
+int validar_cpf(const char *cpf) {
     int i, digitos = 0;
     for (i = 0; cpf[i] != '\0'; i++)
     {
@@ -516,9 +506,8 @@ int validar_cpf(const char *cpf)
     return (digitos == 11);
 }
 
-/* Validação simples de placa (formato antigo: ABC1234 ou Mercosul: ABC1D23) */
-int validar_placa(const char *placa)
-{
+// Validação simples de placa (formato antigo: ABC1234 ou Mercosul: ABC1D23)
+int validar_placa(const char *placa) {
     if (strlen(placa) != 7)
         return 0;
     int i;
@@ -536,9 +525,7 @@ int validar_placa(const char *placa)
 }
 
 /* ===== FUNÇÃO PRINCIPAL ===== */
-
-int main()
-{
+int main() {
 
     setlocale(LC_ALL, "Portuguese");
 
