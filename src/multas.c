@@ -1,120 +1,80 @@
-/*
- * Sistema de Cadastro de Multas de Trânsito
- * Linguagem: C
- * Funcionalidades: cadastrar, listar, buscar, excluir e salvar multas
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
-#include "webview.h"
-
-#define MAX_VEICULOS 100
-#define MAX_MULTAS 100
-#define STR 50
+#include "../include/multas.h"
+#include "../include/extras.h"
 #define ARQUIVO "multas.dat"
 
-/* ===== ESTRUTURA DE DADOS ===== */
-typedef struct
-{
-    char placa[STR];
-    char modelo[STR];
-    char cor[STR];
-    int ano;
-} Veiculo;
+// #define MAX_VEICULOS 100
+// #define ARQUIVO "multas.dat"
 
-typedef struct
-{
-    int id;
-    char  nome[STR];
-    char  cpf[STR];
-    char  cnh[STR];
-    char  placa[STR];
-    char  codigo[STR];
-    char  descricao[200];
-    char  data[STR]; /* formato: DD/MM/AAAA */
-    char  local[STR];
-    float valor;
-    int   pontos;
-    char  status[STR]; /* "Pendente", "Paga", "Recorrida" */
-} Multa;
+/* ===== ESTRUTURA DE DADOS ===== */
+// typedef struct
+// {
+//     char placa[STR];
+//     char modelo[STR];
+//     char cor[STR];
+//     int ano;
+// } Veiculo;
 
 /* ===== ARMAZENAMENTO DE DADOS EM LISTA ===== */
-Veiculo veiculos[MAX_VEICULOS];
-int totalV = 0;
-
-Multa multas[MAX_MULTAS];
-int total = 0;
-int proximo_id = 1;
+// Veiculo veiculos[MAX_VEICULOS];
+// int totalV = 0;
 
 /* ===== PROTÓTIPOS ===== */
-
-void  pausar();
-void  menu_principal();
-void  cadastrar_veiculo();
-void  cadastrar_multa();
-void  listar_multas();
-void  buscar_por_placa();
-void  buscar_por_cpf();
-void  excluir_multa();
-void  alterar_status();
-void  salvar_arquivo();
-void  carregar_arquivo();
-void  exibir_multa(Multa m);
-int   validar_cpf(const char *cpf);
-int   validar_placa(const char *placa);
+// void  cadastrar_veiculo();
 
 /* ===== CADASTRO ===== */
 
 // Cadastro de veículo
-void cadastrar_veiculo() {
+// void cadastrar_veiculo() {
 
-    printf("=== CADASTRAR NOVO VEÍCULO ===\n\n");
+//     printf("=== CADASTRAR NOVO VEÍCULO ===\n\n");
 
-    if (totalV >= MAX_VEICULOS)
-    {
-        printf("ERRO: Limite maximo de %d veiculos atingido!\n", MAX_VEICULOS);
-        pausar();
-        return;
-    }
+//     if (totalV >= MAX_VEICULOS)
+//     {
+//         printf("ERRO: Limite maximo de %d veiculos atingido!\n", MAX_VEICULOS);
+//         pausar();
+//         return;
+//     }
 
-    Veiculo novo;
+//     Veiculo novo;
 
-    do {
-        printf("Insira a placa do seu veiculo: ");
-        fgets(novo.placa, STR, stdin);
-        novo.placa[strcspn(novo.placa, "\n")] = 0;
+//     do {
+//         printf("Insira a placa do seu veiculo: ");
+//         fgets(novo.placa, STR, stdin);
+//         novo.placa[strcspn(novo.placa, "\n")] = 0;
         
-        /* converte para maiusculo */
-        for (int i = 0; novo.placa[i] != '\n'; i++) {
-            novo.placa[i] = toupper(novo.placa[i]);
-        }
+//         /* converte para maiusculo */
+//         for (int i = 0; novo.placa[i] != '\n'; i++) {
+//             novo.placa[i] = toupper(novo.placa[i]);
+//         }
 
-        if (!validar_placa(novo.placa)) {
-            printf("Placa invalida! Use o formato ABC1234.\n");
-        }
+//         if (!validar_placa(novo.placa)) {
+//             printf("Placa invalida! Use o formato ABC1234.\n");
+//         }
 
-    } while (!validar_placa(novo.placa));
+//     } while (!validar_placa(novo.placa));
 
-    printf("Insira o modelo do seu carro: ");
-    fgets(novo.modelo, STR, stdin);
-    novo.modelo[strcspn(novo.modelo, "\n")] = 0;
-    printf("Insira a cor do seu carro: ");
-    fgets(novo.cor, STR, stdin);
-    novo.cor[strcspn(novo.cor, "\n")] = 0;
-    printf("Insira o ano do seu carro: ");
-    scanf("%d", &novo.ano);
-    getchar();
+//     printf("Insira o modelo do seu carro: ");
+//     fgets(novo.modelo, STR, stdin);
+//     novo.modelo[strcspn(novo.modelo, "\n")] = 0;
+//     printf("Insira a cor do seu carro: ");
+//     fgets(novo.cor, STR, stdin);
+//     novo.cor[strcspn(novo.cor, "\n")] = 0;
+//     printf("Insira o ano do seu carro: ");
+//     scanf("%d", &novo.ano);
+//     getchar();
 
-    veiculos[totalV] = novo;
-    totalV++;
+//     veiculos[totalV] = novo;
+//     totalV++;
 
-    salvar_arquivo();
-    printf("\nVeiculo cadastrado com sucesso\n");
-    pausar();
-}
+//     salvar_arquivo();
+//     printf("\nVeiculo cadastrado com sucesso\n");
+//     pausar();
+// }
 
 // Cadastro de multas
 void cadastrar_multa() {
@@ -421,60 +381,6 @@ void carregar_arquivo() {
     printf("Dados carregados: %d multa(s) encontrada(s).\n", total);
 }
 
-/* ===== MENU PRINCIPAL ===== */
-void menu_principal() {
-    int opcao;
-    do {
-        printf("========================================\n");
-        printf("   SISTEMA DE CADASTRO DE MULTAS v1.0  \n");
-        printf("========================================\n\n");
-        printf("  1. Cadastrar nova multa\n");
-        printf("  2. Listar todas as multas\n");
-        printf("  3. Buscar por placa\n");
-        printf("  4. Buscar por CPF\n");
-        printf("  5. Excluir multa\n");
-        printf("  6. Alterar status de pagamento\n");
-        printf("  0. Sair\n\n");
-        printf("Opcao: ");
-        scanf(" %d", &opcao);
-
-        switch (opcao) {
-            case 1:
-                cadastrar_multa();
-                break;
-            case 2:
-                listar_multas();
-                break;
-            case 3:
-                buscar_por_placa();
-                break;
-            case 4:
-                buscar_por_cpf();
-                break;
-            case 5:
-                excluir_multa();
-                break;
-            case 6:
-                alterar_status();
-                break;
-            case 0:
-                printf("\nSaindo... Ate logo!\n");
-                break;
-            default:
-                printf("\nOpcao invalida!\n");
-                pausar();
-        }
-    } while (opcao != 0);
-}
-
-/* ===== FUNÇÕES UTILITÁRIAS ===== */
-
-// Função para pausar a aplicação
-void pausar() {
-    printf("\nPressione ENTER para continuar...");
-    getchar();
-}
-
 // Função para exibir os detalhes de uma multa de forma formatada
 void exibir_multa(Multa m) {
     printf("+-------------------------------------------------+\n");
@@ -523,16 +429,4 @@ int validar_placa(const char *placa) {
     if (placa[6] < '0' || placa[6] > '9')
         return 0;
     return 1;
-}
-
-/* ===== FUNÇÃO PRINCIPAL ===== */
-int main() {
-
-    setlocale(LC_ALL, "Portuguese");
-
-    // carregar_arquivo();
-    // pausar();
-    menu_principal();
-
-    return 0;
 }
