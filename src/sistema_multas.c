@@ -9,6 +9,7 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
+#include "webview.h"
 
 #define MAX_VEICULOS 100
 #define MAX_MULTAS 100
