@@ -1,7 +1,7 @@
 <h1 align="center">🛣️ APOTI</h1>
 
 <p align="center">
-  Um sistema de controle de multas feito por jovens desenvolvedores para facilitar o controle efetivo de multas de trânsito.
+  Um sistema feito por jovens desenvolvedores para facilitar o controle efetivo de multas de trânsito.
 </p>
 
 <p align="center">
