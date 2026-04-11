@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct {
+    char placa[10];
+    char modelo[50];
+} Veiculo;
+
+// ---------------- SALVAR ----------------
+void salvarVeiculo() {
+    FILE *arquivo = fopen("veiculos.dat", "ab");
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir arquivo\n");
+        return;
+    }
+
+    Veiculo v;
+
+    printf("Digite a placa: ");
+    scanf("%9s", v.placa);
+
+    printf("Digite o modelo: ");
+    scanf(" %[^\n]", v.modelo);
+
+    fwrite(&v, sizeof(Veiculo), 1, arquivo);
+
+    fclose(arquivo);
+
+    printf("Veiculo salvo com sucesso!\n");
+}
+
+// ---------------- LISTAR ----------------
+void listarVeiculos() {
+    FILE *arquivo = fopen("veiculos.dat", "rb");
+
+    if (arquivo == NULL) {
+        printf("Nenhum dado encontrado.\n");
+        return;
+    }
+
+    Veiculo v;
+
+    printf("\n--- LISTA DE VEICULOS ---\n");
+
+    while (fread(&v, sizeof(Veiculo), 1, arquivo)) {
+        printf("Placa: %s | Modelo: %s\n", v.placa, v.modelo);
+    }
+
+    fclose(arquivo);
+}
+
+// ---------------- BUSCAR ----------------
+void buscarVeiculo() {
+    FILE *arquivo = fopen("veiculos.dat", "rb");
+
+    if (arquivo == NULL) {
+        printf("Arquivo nao encontrado.\n");
+        return;
+    }
+
+    char placaBusca[10];
+    int encontrado = 0;
+
+    printf("Digite a placa para buscar: ");
+    scanf("%9s", placaBusca);
+
+    Veiculo v;
+
+    while (fread(&v, sizeof(Veiculo), 1, arquivo)) {
+        if (strcmp(v.placa, placaBusca) == 0) {
+            printf("Encontrado!\n");
+            printf("Placa: %s | Modelo: %s\n", v.placa, v.modelo);
+            encontrado = 1;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Veiculo nao encontrado.\n");
+    }
+
+    fclose(arquivo);
+}
+
+// ---------------- MENU ----------------
+int main() {
+    int opcao;
+
+    do {
+        printf("\n===== SISTEMA DE VEICULOS =====\n");
+        printf("1 - Cadastrar veiculo\n");
+        printf("2 - Listar veiculos\n");
+        printf("3 - Buscar veiculo\n");
+        printf("0 - Sair\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+
+        switch(opcao) {
+            case 1:
+                salvarVeiculo();
+                break;
+            case 2:
+                listarVeiculos();
+                break;
+            case 3:
+                buscarVeiculo();
+                break;
+            case 0:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opcao invalida!\n");
+        }
+
+    } while(opcao != 0);
+
+    return 0;
+}
