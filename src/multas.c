@@ -3,78 +3,21 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
-#include "../include/multas.h"
 #include "../include/extras.h"
-#define ARQUIVO "multas.dat"
+#include "../include/multas.h"
+#include "../include/motoristas.h"
+#include "../include/veiculos.h"
 
-// #define MAX_VEICULOS 100
-// #define ARQUIVO "multas.dat"
+#define ARQUIVO "data/multas.dat"
 
-/* ===== ESTRUTURA DE DADOS ===== */
-// typedef struct
-// {
-//     char placa[STR];
-//     char modelo[STR];
-//     char cor[STR];
-//     int ano;
-// } Veiculo;
+Multa multas[MAX_MULTAS];
+int total = 0;
+int proximo_id = 1;
 
-/* ===== ARMAZENAMENTO DE DADOS EM LISTA ===== */
-// Veiculo veiculos[MAX_VEICULOS];
-// int totalV = 0;
-
-/* ===== PROTÓTIPOS ===== */
-// void  cadastrar_veiculo();
-
-/* ===== CADASTRO ===== */
-
-// Cadastro de veículo
-// void cadastrar_veiculo() {
-
-//     printf("=== CADASTRAR NOVO VEÍCULO ===\n\n");
-
-//     if (totalV >= MAX_VEICULOS)
-//     {
-//         printf("ERRO: Limite maximo de %d veiculos atingido!\n", MAX_VEICULOS);
-//         pausar();
-//         return;
-//     }
-
-//     Veiculo novo;
-
-//     do {
-//         printf("Insira a placa do seu veiculo: ");
-//         fgets(novo.placa, STR, stdin);
-//         novo.placa[strcspn(novo.placa, "\n")] = 0;
-        
-//         /* converte para maiusculo */
-//         for (int i = 0; novo.placa[i] != '\n'; i++) {
-//             novo.placa[i] = toupper(novo.placa[i]);
-//         }
-
-//         if (!validar_placa(novo.placa)) {
-//             printf("Placa invalida! Use o formato ABC1234.\n");
-//         }
-
-//     } while (!validar_placa(novo.placa));
-
-//     printf("Insira o modelo do seu carro: ");
-//     fgets(novo.modelo, STR, stdin);
-//     novo.modelo[strcspn(novo.modelo, "\n")] = 0;
-//     printf("Insira a cor do seu carro: ");
-//     fgets(novo.cor, STR, stdin);
-//     novo.cor[strcspn(novo.cor, "\n")] = 0;
-//     printf("Insira o ano do seu carro: ");
-//     scanf("%d", &novo.ano);
-//     getchar();
-
-//     veiculos[totalV] = novo;
-//     totalV++;
-
-//     salvar_arquivo();
-//     printf("\nVeiculo cadastrado com sucesso\n");
-//     pausar();
-// }
+static void flush_stdin(void) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
 // Cadastro de multas
 void cadastrar_multa() {
@@ -91,53 +34,76 @@ void cadastrar_multa() {
     Multa nova;
     nova.id = proximo_id;
 
-    printf("Nome do infrator : ");
-    scanf(" %[^\n]", nova.nome);
-
-    do
-    {
-        printf("CPF (somente numeros ou com . e -) : ");
-        scanf(" %s", nova.cpf);
-        if (!validar_cpf(nova.cpf))
-            printf("CPF invalido! Tente novamente.\n");
-    } while (!validar_cpf(nova.cpf));
-
-    printf("Numero da CNH   : ");
-    scanf(" %s", nova.cnh);
-
+    flush_stdin();
     do {
         printf("Insira a placa do seu veiculo: ");
         fgets(nova.placa, STR, stdin);
         nova.placa[strcspn(nova.placa, "\n")] = 0;
-        
-        /* converte para maiusculo */
-        for (int i = 0; nova.placa[i] != '\n'; i++) {
+
+        for (int i = 0; nova.placa[i]; i++)
             nova.placa[i] = toupper(nova.placa[i]);
-        }
 
         if (!validar_placa(nova.placa)) {
             printf("Placa invalida! Use o formato ABC1234.\n");
         }
-
     } while (!validar_placa(nova.placa));
 
+    Veiculo *veiculo = encontrar_veiculo_por_placa(nova.placa);
+    if (veiculo != NULL)
+    {
+        Motorista *motorista = encontrar_motorista_por_id(veiculo->motorista_id);
+        if (motorista != NULL)
+        {
+            strcpy(nova.nome, motorista->nome);
+            strcpy(nova.cpf, motorista->cpf);
+            strcpy(nova.cnh, motorista->cnh);
+            printf("Dados do motorista carregados a partir da placa cadastrada.\n");
+            printf("Nome: %s\nCPF: %s\nCNH: %s\n\n", nova.nome, nova.cpf, nova.cnh);
+        }
+    }
+    else
+    {
+        printf("Nome do infrator : ");
+        fgets(nova.nome, STR, stdin);
+        nova.nome[strcspn(nova.nome, "\n")] = 0;
+
+        do
+        {
+            printf("CPF (somente numeros ou com . e -) : ");
+            fgets(nova.cpf, STR, stdin);
+            nova.cpf[strcspn(nova.cpf, "\n")] = 0;
+
+            if (!validar_cpf(nova.cpf))
+                printf("CPF invalido! Tente novamente.\n");
+
+        } while (!validar_cpf(nova.cpf));
+
+        printf("Numero da CNH   : ");
+        fgets(nova.cnh, STR, stdin);
+        nova.cnh[strcspn(nova.cnh, "\n")] = 0;
+    }
+
     printf("Codigo da infracao : ");
-    scanf(" %s", nova.codigo);
+    fgets(nova.codigo, STR, stdin);
+    nova.codigo[strcspn(nova.codigo, "\n")] = 0;
 
     printf("Descricao        : ");
-    scanf(" %[^\n]", nova.descricao);
+    fgets(nova.descricao, STR, stdin);
+    nova.descricao[strcspn(nova.descricao, "\n")] = 0;
 
     printf("Data (DD/MM/AAAA): ");
-    scanf(" %s", nova.data);
+    fgets(nova.data, STR, stdin);
+    nova.data[strcspn(nova.data, "\n")] = 0;
 
     printf("Local da infracao: ");
-    scanf(" %[^\n]", nova.local);
+    fgets(nova.local, STR, stdin);
+    nova.local[strcspn(nova.local, "\n")] = 0;
 
     printf("Valor da multa (R$): ");
-    scanf(" %f", &nova.valor);
+    scanf("%f", &nova.valor);
 
     printf("Pontuacao na CNH : ");
-    scanf(" %d", &nova.pontos);
+    scanf("%d", &nova.pontos);
 
     strcpy(nova.status, "Pendente");
 

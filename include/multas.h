@@ -1,9 +1,8 @@
 #ifndef MULTA_H
-
 #define MULTA_H
+
 #define STR 50
 #define MAX_MULTAS 100
-
 
 typedef struct
 {
@@ -21,11 +20,10 @@ typedef struct
     char  status[STR]; /* "Pendente", "Paga", "Recorrida" */
 } Multa;
 
-Multa multas[MAX_MULTAS];
-int total = 0;
-int proximo_id = 1;
+extern Multa multas[MAX_MULTAS];
+extern int total;
+extern int proximo_id;
 
-// Protótipos das funções
 void  cadastrar_multa();
 void  listar_multas();
 void  buscar_por_placa();

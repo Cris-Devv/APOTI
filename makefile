@@ -1,36 +1,77 @@
-# Compilador e flags
+# ========================================
+# MAKEFILE - Sistema de Multas em C
+# ========================================
+
+# Compilador e flags de compilação
 CC = gcc
 CFLAGS = -Wall -Wextra -I./include
 
-# Pastas
+# Diretórios do projeto
 SRC_DIR = src
 BUILD_DIR = build
+INCLUDE_DIR = include
+DATA_DIR = data
 
-# Arquivos: pega todos os .c em src/ e mapeia para .o em build/
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
-
-# Nome do executável final
+# Arquivo executável final
 TARGET = $(BUILD_DIR)/multas
 
-# Regra padrão
-all: $(BUILD_DIR) $(TARGET)
+# Arquivos FONTE a compilar
+SRCS = $(SRC_DIR)/main.c \
+       $(SRC_DIR)/extras.c \
+       $(SRC_DIR)/multas.c \
+       $(SRC_DIR)/motoristas.c \
+       $(SRC_DIR)/veiculos.c
 
-# Cria a pasta build se não existir
+# Converte cada .c em seu arquivo .o correspondente
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+
+# HEADERS que as compilações dependem
+HEADERS = $(INCLUDE_DIR)/multas.h $(INCLUDE_DIR)/extras.h $(INCLUDE_DIR)/motoristas.h $(INCLUDE_DIR)/veiculos.h
+
+# ========================================
+# REGRAS
+# ========================================
+
+# Regra padrão (executada com 'make' ou 'mingw32-make')
+all: $(BUILD_DIR) $(DATA_DIR) $(TARGET)
+	@echo Compilacao concluida com sucesso!
+
+# Cria o diretório build se não existir
 $(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
 
-# Linka os .o e gera o executável
+# Cria o diretório data se não existir
+$(DATA_DIR):
+	@if not exist $(DATA_DIR) mkdir $(DATA_DIR)
+
+# Linka os .o e gera o executável final
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
+	@echo Executavel gerado: $@
 
-# Compila cada .c em seu respectivo .o
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+# Regra genérica para compilar cada .c em .o
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
+	@echo Compilado: $<
 
-# Remove os arquivos gerados
+# Remove os arquivos gerados (clean)
 clean:
-	rm -rf $(BUILD_DIR)
+	@if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
+	@if exist $(DATA_DIR) rmdir /s /q $(DATA_DIR)
+	@echo Build removido!
 
-# Evita conflito se existir um arquivo chamado "all" ou "clean"
-.PHONY: all clean
+# Executa o programa
+run: all
+	$(TARGET)
+
+# Mostra informações do projeto
+info:
+	@echo === INFORMACOES DO PROJETO ===
+	@echo Compilador: $(CC)
+	@echo Flags: $(CFLAGS)
+	@echo Arquivos fonte: $(SRCS)
+	@echo Arquivos objeto: $(OBJS)
+	@echo Executavel: $(TARGET)
+
+# Declara que essas não são arquivos reais
+.PHONY: all clean run info
