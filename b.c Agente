@@ -1,0 +1,155 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#define MAX 100
+#define STR 100
+
+typedef struct {
+    int id;
+    char nome[STR];
+    char cpf[STR];
+} Condutor;
+
+typedef struct {
+    int id;
+    int agente_id;
+    int infrator_id;
+    char descricao[STR];
+    double valor;
+    char status[20];
+} Multa;
+
+Condutor condutores[MAX];
+Multa multas[MAX];
+
+int qtd_condutores = 0;
+int qtd_multas = 0;
+
+int prox_condutor = 1;
+int prox_multa = 1;
+
+/* REMOVE \n */
+void limpar_enter(char *str){
+    str[strcspn(str,"\n")] = 0;
+}
+
+/* LIMPAR BUFFER */
+void limpar_buffer(){
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
+}
+
+/* CADASTRAR CONDUTOR */
+void cadastrar_condutor(){
+    if(qtd_condutores >= MAX){
+        printf("Limite atingido!\n");
+        return;
+    }
+
+    Condutor *c = &condutores[qtd_condutores];
+
+    c->id = prox_condutor++;
+
+    printf("Nome: ");
+    fgets(c->nome, STR, stdin);
+    limpar_enter(c->nome);
+
+    printf("CPF: ");
+    fgets(c->cpf, STR, stdin);
+    limpar_enter(c->cpf);
+
+    qtd_condutores++;
+
+    printf("Cadastrado com sucesso!\n");
+}
+
+/* REGISTRAR MULTA */
+void registrar_multa(){
+    if(qtd_multas >= MAX){
+        printf("Limite de multas!\n");
+        return;
+    }
+
+    Multa *m = &multas[qtd_multas];
+    m->id = prox_multa++;
+
+    printf("ID agente: ");
+    scanf("%d",&m->agente_id);
+
+    printf("ID condutor: ");
+    scanf("%d",&m->infrator_id);
+
+    limpar_buffer();
+
+    printf("Descricao: ");
+    fgets(m->descricao, STR, stdin);
+    limpar_enter(m->descricao);
+
+    printf("Valor: ");
+    scanf("%lf",&m->valor);
+    limpar_buffer();
+
+    strcpy(m->status,"pendente");
+
+    qtd_multas++;
+
+    printf("Multa registrada!\n");
+}
+
+/* PAGAR MULTA */
+void pagar_multa(){
+    int id, achou = 0;
+
+    printf("ID multa: ");
+    scanf("%d",&id);
+
+    for(int i=0;i<qtd_multas;i++){
+        if(multas[i].id == id){
+            strcpy(multas[i].status,"pago");
+            printf("Multa paga!\n");
+            achou = 1;
+            break;
+        }
+    }
+
+    if(!achou){
+        printf("Multa nao encontrada!\n");
+    }
+
+    limpar_buffer();
+}
+
+/* LISTAR */
+void listar(){
+    printf("\n--- MULTAS ---\n");
+    for(int i=0;i<qtd_multas;i++){
+        printf("ID:%d | Condutor:%d | Valor:%.2f | Status:%s\n",
+            multas[i].id,
+            multas[i].infrator_id,
+            multas[i].valor,
+            multas[i].status);
+    }
+}
+
+/* MENU */
+int main(){
+    int op;
+
+    do{
+        printf("\n1-Cadastrar Condutor\n2-Registrar Multa\n3-Pagar\n4-Listar\n0-Sair\n");
+        scanf("%d",&op);
+        limpar_buffer();
+
+        switch(op){
+            case 1: cadastrar_condutor(); break;
+            case 2: registrar_multa(); break;
+            case 3: pagar_multa(); break;
+            case 4: listar(); break;
+        }
+
+    }while(op != 0);
+
+    return 0;
+}
