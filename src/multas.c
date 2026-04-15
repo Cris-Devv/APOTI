@@ -96,6 +96,7 @@ void cadastrar_multa() {
     printf("Opcao: ");
     int opcao_infracao;
     scanf("%d", &opcao_infracao);
+    flush_stdin();
 
     nova.tipo_infracao = (TipoInfracao)opcao_infracao;
     Infracao infracao = obter_infracao(nova.tipo_infracao);
