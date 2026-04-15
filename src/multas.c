@@ -398,6 +398,8 @@ int validar_placa(const char *placa) {
             return 0;
     if (placa[3] < '0' || placa[3] > '9')
         return 0;
+    if (placa[4] < '0' || placa[4] > '9' && placa[4] < 'A' || placa[4] > 'Z' )
+        return 0;
     /* aceita digito ou letra na 5a posicao (Mercosul) */
     if (placa[5] < '0' || placa[5] > '9')
         return 0;
