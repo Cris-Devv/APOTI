@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "../include/extras.h"
+
 #include "../include/veiculos.h"
 #include "../include/motoristas.h"
 #include "../include/multas.h"
@@ -13,22 +13,28 @@ Veiculo veiculos[MAX_VEICULOS];
 int total_veiculos = 0;
 int proximo_veiculo_id = 1;
 
-static void flush_stdin(void) {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
+// static void flush_stdin(void)
+// {
+//     int c;
+//     while ((c = getchar()) != '\n' && c != EOF)
+//         ;
+// }
 
-Veiculo *encontrar_veiculo_por_placa(const char *placa) {
-    for (int i = 0; i < total_veiculos; i++) {
+Veiculo *encontrar_veiculo_por_placa(const char *placa)
+{
+    for (int i = 0; i < total_veiculos; i++)
+    {
         if (strcmp(veiculos[i].placa, placa) == 0)
             return &veiculos[i];
     }
     return NULL;
 }
 
-void salvar_veiculos() {
+void salvar_veiculos()
+{
     FILE *fp = fopen(ARQUIVO_VEICULOS, "wb");
-    if (!fp) {
+    if (!fp)
+    {
         printf("ERRO: Nao foi possivel salvar o arquivo de veiculos!\n");
         return;
     }
@@ -38,9 +44,11 @@ void salvar_veiculos() {
     fclose(fp);
 }
 
-void carregar_veiculos() {
+void carregar_veiculos()
+{
     FILE *fp = fopen(ARQUIVO_VEICULOS, "rb");
-    if (!fp) {
+    if (!fp)
+    {
         printf("Nenhum arquivo de veiculos encontrado. Iniciando com banco vazio.\n");
         return;
     }
@@ -51,11 +59,14 @@ void carregar_veiculos() {
     printf("Dados de veiculos carregados: %d encontrado(s).\n", total_veiculos);
 }
 
-void listar_veiculos_do_motorista(int motorista_id) {
+void listar_veiculos_do_motorista(int motorista_id)
+{
     printf("=== VEICULOS DO MOTORISTA (ID %d) ===\n\n", motorista_id);
     int encontrados = 0;
-    for (int i = 0; i < total_veiculos; i++) {
-        if (veiculos[i].motorista_id == motorista_id) {
+    for (int i = 0; i < total_veiculos; i++)
+    {
+        if (veiculos[i].motorista_id == motorista_id)
+        {
             printf("ID: %d\n", veiculos[i].id);
             printf("Placa : %s\n", veiculos[i].placa);
             printf("Modelo: %s\n", veiculos[i].modelo);
@@ -68,16 +79,20 @@ void listar_veiculos_do_motorista(int motorista_id) {
         printf("Nenhum veiculo cadastrado para este motorista.\n");
 }
 
-void listar_veiculos() {
+void listar_veiculos()
+{
     printf("=== LISTAR VEICULOS ===\n\n");
 
-    if (total_veiculos == 0) {
+    if (total_veiculos == 0)
+    {
         printf("Nenhum veiculo cadastrado.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
-    for (int i = 0; i < total_veiculos; i++) {
+    for (int i = 0; i < total_veiculos; i++)
+    {
         Veiculo v = veiculos[i];
         Motorista *motorista = encontrar_motorista_por_id(v.motorista_id);
         printf("ID: %d\n", v.id);
@@ -90,20 +105,26 @@ void listar_veiculos() {
     }
 
     printf("Total: %d veiculo(s)\n", total_veiculos);
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
-void cadastrar_veiculo_para_motorista(int motorista_id) {
-    if (total_veiculos >= MAX_VEICULOS) {
+void cadastrar_veiculo_para_motorista(int motorista_id)
+{
+    if (total_veiculos >= MAX_VEICULOS)
+    {
         printf("ERRO: Limite maximo de %d veiculos atingido!\n", MAX_VEICULOS);
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
     Motorista *motorista = encontrar_motorista_por_id(motorista_id);
-    if (motorista == NULL) {
+    if (motorista == NULL)
+    {
         printf("Motorista nao encontrado.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
@@ -111,8 +132,9 @@ void cadastrar_veiculo_para_motorista(int motorista_id) {
     novo.id = proximo_veiculo_id;
     novo.motorista_id = motorista_id;
 
-    flush_stdin();
-    do {
+    // flush_stdin();
+    do
+    {
         printf("Placa do veiculo: ");
         fgets(novo.placa, STR, stdin);
         novo.placa[strcspn(novo.placa, "\n")] = 0;
@@ -120,12 +142,14 @@ void cadastrar_veiculo_para_motorista(int motorista_id) {
         for (int i = 0; novo.placa[i]; i++)
             novo.placa[i] = toupper(novo.placa[i]);
 
-        if (!validar_placa(novo.placa)) {
+        if (!validar_placa(novo.placa))
+        {
             printf("Placa invalida! Use o formato ABC1234.\n");
             continue;
         }
 
-        if (encontrar_veiculo_por_placa(novo.placa) != NULL) {
+        if (encontrar_veiculo_por_placa(novo.placa) != NULL)
+        {
             printf("Esta placa ja esta cadastrada.\n");
         }
     } while (!validar_placa(novo.placa) || encontrar_veiculo_por_placa(novo.placa) != NULL);
@@ -144,5 +168,6 @@ void cadastrar_veiculo_para_motorista(int motorista_id) {
     salvar_veiculos();
 
     printf("\nVeiculo cadastrado com sucesso! (ID: %d)\n", novo.id);
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }

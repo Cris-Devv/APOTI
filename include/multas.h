@@ -4,6 +4,25 @@
 #define STR 50
 #define MAX_MULTAS 100
 
+typedef struct
+{
+    int   id;
+    char  nome[STR];
+    char  cpf[STR];
+    char  cnh[STR];
+    char  placa[STR];
+    TipoInfracao tipo_infracao;
+    char  data[STR]; /* formato: DD/MM/AAAA */
+    char  local[STR];
+    float valor;
+    int   pontos;
+    char  status[STR]; /* "Pendente", "Paga", "Recorrida" */
+} Multa;
+
+extern Multa multas[MAX_MULTAS];
+extern int total;
+extern int proximo_id;
+
 typedef enum {
     INF_AVANCAR_SEMAFORO_VERMELHO = 1,
     INF_ESTACIONAR_LOCAL_PROIBIDO,
@@ -23,36 +42,17 @@ typedef struct {
     int pontos;
 } Infracao;
 
-typedef struct
-{
-    int id;
-    char  nome[STR];
-    char  cpf[STR];
-    char  cnh[STR];
-    char  placa[STR];
-    TipoInfracao tipo_infracao;
-    char  data[STR]; /* formato: DD/MM/AAAA */
-    char  local[STR];
-    float valor;
-    int   pontos;
-    char  status[STR]; /* "Pendente", "Paga", "Recorrida" */
-} Multa;
-
-extern Multa multas[MAX_MULTAS];
-extern int total;
-extern int proximo_id;
-
-void  cadastrar_multa();
-void  listar_multas();
-void  buscar_por_placa();
-void  buscar_por_cpf();
-void  excluir_multa();
-void  alterar_status();
-void  exibir_multa(Multa m);
-void  salvar_arquivo();
-void  carregar_arquivo();
-int   validar_cpf(const char *cpf);
-int   validar_placa(const char *placa);
-Infracao obter_infracao(TipoInfracao tipo);
+void  cadastrarMultas();
+void  listarMultas();
+void  buscarPlaca();
+void  buscarCPF();
+void  excluirMulta();
+void  alterarStatus();
+void  exibirMulta(Multa m);
+void  salvarArquivo();
+void  carregarArquivo();
+int   validarCpf(const char *cpf);
+int   validarPlaca(const char *placa);
+Infracao obterInfracao(TipoInfracao tipo);
 
 #endif

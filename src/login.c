@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "../include/login.h"
 #include "../include/motoristas.h"
 #include "../include/agentes.h"
 #include "../include/multas.h"
 #include "../include/veiculos.h"
-#include "../include/extras.h"
 
 UsuarioLogado usuario_atual = {TIPO_ADMIN, -1};
 
@@ -48,7 +48,7 @@ void menu_login() {
     int opcao;
     do {
         printf("========================================\n");
-        printf("   SISTEMA DE CADASTRO DE MULTAS v1.2  \n");
+        printf("   APOTI \n");
         printf("========================================\n\n");
         printf("1. Login como Motorista\n");
         printf("2. Login como Agente\n");
@@ -270,7 +270,7 @@ void menu_agente() {
                     scanf("%d", &opcao_infracao);
 
                     multas[pos].tipo_infracao = (TipoInfracao)opcao_infracao;
-                    Infracao infracao = obter_infracao(multas[pos].tipo_infracao);
+                    Infracao infracao = obterInfracao(multas[pos].tipo_infracao);
                     multas[pos].valor = infracao.valor;
                     multas[pos].pontos = infracao.pontos;
 

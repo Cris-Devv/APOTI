@@ -1,7 +1,3 @@
-# ========================================
-# MAKEFILE - Sistema de Multas em C
-# ========================================
-
 # Compilador e flags de compilação
 CC = gcc
 CFLAGS = -Wall -Wextra -I./include
@@ -29,10 +25,6 @@ OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 # HEADERS que as compilações dependem
 HEADERS = $(INCLUDE_DIR)/multas.h $(INCLUDE_DIR)/extras.h $(INCLUDE_DIR)/motoristas.h $(INCLUDE_DIR)/veiculos.h $(INCLUDE_DIR)/agentes.h $(INCLUDE_DIR)/login.h
-
-# ========================================
-# REGRAS
-# ========================================
 
 # Regra padrão (executada com 'make' ou 'mingw32-make')
 all: $(BUILD_DIR) $(DATA_DIR) $(TARGET)

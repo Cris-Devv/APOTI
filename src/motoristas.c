@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
 #include "../include/motoristas.h"
 #include "../include/veiculos.h"
 #include "../include/multas.h"
@@ -10,30 +11,36 @@ Motorista motoristas[MAX_MOTORISTAS];
 int total_motoristas = 0;
 int proximo_motorista_id = 1;
 
-static void flush_stdin(void) {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
+// static void flush_stdin(void) {
+//     int c;
+//     while ((c = getchar()) != '\n' && c != EOF);
+// }
 
-Motorista *encontrar_motorista_por_cpf(const char *cpf) {
-    for (int i = 0; i < total_motoristas; i++) {
+Motorista *encontrar_motorista_por_cpf(const char *cpf)
+{
+    for (int i = 0; i < total_motoristas; i++)
+    {
         if (strcmp(motoristas[i].cpf, cpf) == 0)
             return &motoristas[i];
     }
     return NULL;
 }
 
-Motorista *encontrar_motorista_por_id(int id) {
-    for (int i = 0; i < total_motoristas; i++) {
+Motorista *encontrar_motorista_por_id(int id)
+{
+    for (int i = 0; i < total_motoristas; i++)
+    {
         if (motoristas[i].id == id)
             return &motoristas[i];
     }
     return NULL;
 }
 
-void salvar_motoristas() {
+void salvar_motoristas()
+{
     FILE *fp = fopen("data/motoristas.dat", "wb");
-    if (!fp) {
+    if (!fp)
+    {
         printf("ERRO: Nao foi possivel salvar o arquivo de motoristas!\n");
         return;
     }
@@ -43,9 +50,11 @@ void salvar_motoristas() {
     fclose(fp);
 }
 
-void carregar_motoristas() {
+void carregar_motoristas()
+{
     FILE *fp = fopen("data/motoristas.dat", "rb");
-    if (!fp) {
+    if (!fp)
+    {
         printf("Nenhum arquivo de motoristas encontrado. Iniciando com banco vazio.\n");
         return;
     }
@@ -56,24 +65,28 @@ void carregar_motoristas() {
     printf("Dados de motoristas carregados: %d encontrado(s).\n", total_motoristas);
 }
 
-void cadastrar_motorista() {
+void cadastrar_motorista()
+{
     printf("=== CADASTRAR NOVO MOTORISTA ===\n\n");
 
-    if (total_motoristas >= MAX_MOTORISTAS) {
+    if (total_motoristas >= MAX_MOTORISTAS)
+    {
         printf("ERRO: Limite maximo de %d motoristas atingido!\n", MAX_MOTORISTAS);
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
     Motorista novo;
     novo.id = proximo_motorista_id;
 
-    flush_stdin();
+    // flush_stdin();
     printf("Nome: ");
     fgets(novo.nome, STR, stdin);
     novo.nome[strcspn(novo.nome, "\n")] = 0;
 
-    do {
+    do
+    {
         printf("CPF (somente numeros ou com . e -): ");
         fgets(novo.cpf, STR, stdin);
         novo.cpf[strcspn(novo.cpf, "\n")] = 0;
@@ -91,7 +104,8 @@ void cadastrar_motorista() {
     novo.email[strcspn(novo.email, "\n")] = 0;
 
     char confirma[STR];
-    do {
+    do
+    {
         printf("Senha: ");
         fgets(novo.senha, STR, stdin);
         novo.senha[strcspn(novo.senha, "\n")] = 0;
@@ -112,23 +126,29 @@ void cadastrar_motorista() {
     printf("\nMotorista cadastrado com sucesso! (ID: %d)\n", novo.id);
 
     char resposta[STR];
-    do {
+    do
+    {
         printf("Deseja cadastrar um veiculo para este motorista agora? (s/n): ");
         fgets(resposta, STR, stdin);
         resposta[strcspn(resposta, "\n")] = 0;
 
-        if (resposta[0] == 's' || resposta[0] == 'S') {
+        if (resposta[0] == 's' || resposta[0] == 'S')
+        {
             cadastrar_veiculo_para_motorista(novo.id);
         }
     } while (resposta[0] == 's' || resposta[0] == 'S');
 
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
-void cadastrar_veiculo_existente() {
-    if (total_motoristas == 0) {
+void cadastrar_veiculo_existente()
+{
+    if (total_motoristas == 0)
+    {
         printf("Nenhum motorista cadastrado.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
@@ -137,25 +157,31 @@ void cadastrar_veiculo_existente() {
     scanf(" %49s", cpf);
 
     Motorista *motorista = encontrar_motorista_por_cpf(cpf);
-    if (motorista == NULL) {
+    if (motorista == NULL)
+    {
         printf("Motorista nao encontrado.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
     cadastrar_veiculo_para_motorista(motorista->id);
 }
 
-void listar_motoristas() {
+void listar_motoristas()
+{
     printf("=== LISTAR MOTORISTAS ===\n\n");
 
-    if (total_motoristas == 0) {
+    if (total_motoristas == 0)
+    {
         printf("Nenhum motorista cadastrado.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
-    for (int i = 0; i < total_motoristas; i++) {
+    for (int i = 0; i < total_motoristas; i++)
+    {
         Motorista m = motoristas[i];
         printf("ID: %d\n", m.id);
         printf("Nome : %s\n", m.nome);
@@ -166,5 +192,6 @@ void listar_motoristas() {
     }
 
     printf("Total: %d motorista(s)\n", total_motoristas);
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }

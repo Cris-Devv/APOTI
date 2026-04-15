@@ -1,5 +1,5 @@
 #include <locale.h>
-#include "../include/extras.h"
+
 #include "../include/multas.h"
 #include "../include/motoristas.h"
 #include "../include/veiculos.h"
@@ -15,7 +15,7 @@ int main() {
     carregar_motoristas();
     carregar_veiculos();
     carregar_agentes();
-    cadastrar_usuario_inicial();
+    // cadastrar_usuario_inicial();
     menu_login();
 
     return 0;

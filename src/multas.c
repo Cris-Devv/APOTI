@@ -1,84 +1,90 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <locale.h>
-#include <ctype.h>
-#include "../include/extras.h"
+// Bibliotecas para a etapa de multas
+#include <stdio.h> // Biblioteca básica do C para entrada e saída de dados
+#include <locale.h> // Configurações regionais (para acentos e moeda)
+#include <ctype.h> // Biblioteca para manipulação de caracteres (toupper, etc.)
+#include <string.h> // Biblioteca para manipulação de strings (strcspn, etc.)
+// #include <stdlib.h>  
+
+// Inclusão dos arquivos de cabeçalho do projeto
 #include "../include/multas.h"
 #include "../include/motoristas.h"
 #include "../include/veiculos.h"
 
+// Definição do nome do arquivo para armazenamento dos dados de multas
 #define ARQUIVO "data/multas.dat"
 
+// Declaração das variáveis globais para armazenar as multas
 Multa multas[MAX_MULTAS];
 int total = 0;
 int proximo_id = 1;
 
-static void flush_stdin(void) {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
+// static void flush_stdin(void) {
+//     int c;
+//     while ((c = getchar()) != '\n' && c != EOF);
+// }
 
 // Cadastro de multas
-void cadastrar_multa() {
+void cadastrarMulta() {
 
-    printf("=== CADASTRAR NOVA MULTA ===\n\n");
+    printf("=== CADASTRAR NOVA MULTA ===\n");
 
     if (total >= MAX_MULTAS)
     {
         printf("ERRO: Limite maximo de %d multas atingido!\n", MAX_MULTAS);
-        pausar();
+        
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
     Multa nova;
     nova.id = proximo_id;
 
-    flush_stdin();
+    // flush_stdin();
+
     do {
         printf("Insira a placa do seu veiculo: ");
         fgets(nova.placa, STR, stdin);
         nova.placa[strcspn(nova.placa, "\n")] = 0;
 
-        for (int i = 0; nova.placa[i]; i++)
-            nova.placa[i] = toupper(nova.placa[i]);
+        for (int i = 0; nova.placa[i]; i++) {
+            nova.placa[i] = toupper(nova.placa[i]); // função toupper usada para converter placa para maiúsculo
+        }
 
-        if (!validar_placa(nova.placa)) {
+        if (!validarPlaca(nova.placa)) {
             printf("Placa invalida! Use o formato ABC1234.\n");
         }
-    } while (!validar_placa(nova.placa));
-
+    } while (!validarPlaca(nova.placa));
+    
+    // Tenta encontrar o motorista pelo número da placa para preencher os dados automaticamente
     Veiculo *veiculo = encontrar_veiculo_por_placa(nova.placa);
-    if (veiculo != NULL)
-    {
+    if (veiculo != NULL) {
         Motorista *motorista = encontrar_motorista_por_id(veiculo->motorista_id);
-        if (motorista != NULL)
-        {
+        if (motorista != NULL) {
+            // Copia os dados do motorista para os campos da multa
             strcpy(nova.nome, motorista->nome);
             strcpy(nova.cpf, motorista->cpf);
             strcpy(nova.cnh, motorista->cnh);
             printf("Dados do motorista carregados a partir da placa cadastrada.\n");
-            printf("Nome: %s\nCPF: %s\nCNH: %s\n\n", nova.nome, nova.cpf, nova.cnh);
+            printf("Nome: %s\nCPF: %s\nCNH: %s\n", nova.nome, nova.cpf, nova.cnh);
         }
-    }
-    else
-    {
-        printf("Nome do infrator : ");
+    } else {
+        printf("Nome do infrator: ");
         fgets(nova.nome, STR, stdin);
         nova.nome[strcspn(nova.nome, "\n")] = 0;
 
-        do
-        {
-            printf("CPF (somente numeros ou com . e -) : ");
+        do {
+            printf("CPF (somente numeros ou com . e -): ");
             fgets(nova.cpf, STR, stdin);
             nova.cpf[strcspn(nova.cpf, "\n")] = 0;
 
-            if (!validar_cpf(nova.cpf))
+            if (!validar_cpf(nova.cpf)) {
                 printf("CPF invalido! Tente novamente.\n");
+            }
 
         } while (!validar_cpf(nova.cpf));
 
-        printf("Numero da CNH   : ");
+        printf("Numero da CNH: ");
         fgets(nova.cnh, STR, stdin);
         nova.cnh[strcspn(nova.cnh, "\n")] = 0;
     }
@@ -121,7 +127,8 @@ void cadastrar_multa() {
     printf("Infracao: %s\n", infracao.descricao);
     printf("Valor: R$ %.2f\n", nova.valor);
     printf("Pontos: %d\n", nova.pontos);
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
 /* ===== CONSULTA ===== */
@@ -134,7 +141,8 @@ void listar_multas() {
     if (total == 0)
     {
         printf("Nenhuma multa cadastrada.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
@@ -146,7 +154,8 @@ void listar_multas() {
     }
 
     printf("Total: %d multa(s)\n", total);
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
 // Listagem por placa do carro
@@ -178,7 +187,8 @@ void buscar_por_placa() {
     if (!encontrado)
         printf("Nenhuma multa encontrada para a placa '%s'.\n", placa);
 
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
 // Listagem por CPF do infrator
@@ -204,7 +214,8 @@ void buscar_por_cpf() {
     if (!encontrado)
         printf("Nenhuma multa encontrada para o CPF '%s'.\n", cpf);
 
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
 /* ===== ATUALIZAR STATUS ===== */
@@ -231,7 +242,8 @@ void alterar_status() {
     if (pos == -1)
     {
         printf("Multa com ID %d nao encontrada.\n", id);
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
@@ -257,13 +269,15 @@ void alterar_status() {
         break;
     default:
         printf("Opcao invalida.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
     salvar_arquivo();
     printf("Status atualizado para '%s'.\n", multas[pos].status);
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
 /* ===== EXCLUSAO ===== */
@@ -276,7 +290,8 @@ void excluir_multa() {
     if (total == 0)
     {
         printf("Nenhuma multa cadastrada.\n");
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
@@ -297,7 +312,8 @@ void excluir_multa() {
     if (pos == -1)
     {
         printf("Multa com ID %d nao encontrada.\n", id);
-        pausar();
+        printf("\nPressione ENTER para continuar...");
+        getchar();
         return;
     }
 
@@ -320,7 +336,8 @@ void excluir_multa() {
         printf("Exclusao cancelada.\n");
     }
 
-    pausar();
+    printf("\nPressione ENTER para continuar...");
+    getchar();
 }
 
 /* ===== ARQUIVO ===== */
@@ -388,7 +405,7 @@ int validar_cpf(const char *cpf) {
 }
 
 // Validação simples de placa (formato antigo: ABC1234 ou Mercosul: ABC1D23)
-int validar_placa(const char *placa) {
+int validarPlaca(const char *placa) {
     if (strlen(placa) != 7)
         return 0;
     int i;
