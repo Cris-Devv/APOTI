@@ -48,7 +48,7 @@ void menu_login() {
     int opcao;
     do {
         printf("========================================\n");
-        printf("   SISTEMA DE CADASTRO DE MULTAS v1.2  \n");
+        printf("   APOTI  \n");
         printf("========================================\n\n");
         printf("1. Login como Motorista\n");
         printf("2. Login como Agente\n");
