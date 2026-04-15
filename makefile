@@ -20,13 +20,15 @@ SRCS = $(SRC_DIR)/main.c \
        $(SRC_DIR)/extras.c \
        $(SRC_DIR)/multas.c \
        $(SRC_DIR)/motoristas.c \
-       $(SRC_DIR)/veiculos.c
+       $(SRC_DIR)/veiculos.c \
+       $(SRC_DIR)/agentes.c \
+       $(SRC_DIR)/login.c
 
 # Converte cada .c em seu arquivo .o correspondente
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 # HEADERS que as compilações dependem
-HEADERS = $(INCLUDE_DIR)/multas.h $(INCLUDE_DIR)/extras.h $(INCLUDE_DIR)/motoristas.h $(INCLUDE_DIR)/veiculos.h
+HEADERS = $(INCLUDE_DIR)/multas.h $(INCLUDE_DIR)/extras.h $(INCLUDE_DIR)/motoristas.h $(INCLUDE_DIR)/veiculos.h $(INCLUDE_DIR)/agentes.h $(INCLUDE_DIR)/login.h
 
 # ========================================
 # REGRAS

@@ -4,6 +4,25 @@
 #define STR 50
 #define MAX_MULTAS 100
 
+typedef enum {
+    INF_AVANCAR_SEMAFORO_VERMELHO = 1,
+    INF_ESTACIONAR_LOCAL_PROIBIDO,
+    INF_EXCESSO_VELOCIDADE_LEVE,
+    INF_EXCESSO_VELOCIDADE_GRAVE,
+    INF_DIRIGIR_SEM_CINTO,
+    INF_USO_CELULAR_DIRIGINDO,
+    INF_TRANSPORTAR_CRIAANCAS_SEM_CADEIRINHA,
+    INF_DIRIGIR_SEM_HABILITACAO,
+    INF_VEICULO_COM_DEFEITO
+} TipoInfracao;
+
+typedef struct {
+    TipoInfracao tipo;
+    char descricao[200];
+    float valor;
+    int pontos;
+} Infracao;
+
 typedef struct
 {
     int id;
@@ -11,8 +30,7 @@ typedef struct
     char  cpf[STR];
     char  cnh[STR];
     char  placa[STR];
-    char  codigo[STR];
-    char  descricao[200];
+    TipoInfracao tipo_infracao;
     char  data[STR]; /* formato: DD/MM/AAAA */
     char  local[STR];
     float valor;
@@ -35,5 +53,6 @@ void  salvar_arquivo();
 void  carregar_arquivo();
 int   validar_cpf(const char *cpf);
 int   validar_placa(const char *placa);
+Infracao obter_infracao(TipoInfracao tipo);
 
 #endif

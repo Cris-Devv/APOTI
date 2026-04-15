@@ -83,13 +83,24 @@ void cadastrar_multa() {
         nova.cnh[strcspn(nova.cnh, "\n")] = 0;
     }
 
-    printf("Codigo da infracao : ");
-    fgets(nova.codigo, STR, stdin);
-    nova.codigo[strcspn(nova.codigo, "\n")] = 0;
+    printf("Tipo de infracao:\n");
+    printf("1. Avancar semaforo vermelho\n");
+    printf("2. Estacionar em local proibido\n");
+    printf("3. Excesso de velocidade leve\n");
+    printf("4. Excesso de velocidade grave\n");
+    printf("5. Dirigir sem cinto\n");
+    printf("6. Uso de celular dirigindo\n");
+    printf("7. Transportar criancas sem cadeirinha\n");
+    printf("8. Dirigir sem habilitacao\n");
+    printf("9. Veiculo com defeito\n");
+    printf("Opcao: ");
+    int opcao_infracao;
+    scanf("%d", &opcao_infracao);
 
-    printf("Descricao        : ");
-    fgets(nova.descricao, STR, stdin);
-    nova.descricao[strcspn(nova.descricao, "\n")] = 0;
+    nova.tipo_infracao = (TipoInfracao)opcao_infracao;
+    Infracao infracao = obter_infracao(nova.tipo_infracao);
+    nova.valor = infracao.valor;
+    nova.pontos = infracao.pontos;
 
     printf("Data (DD/MM/AAAA): ");
     fgets(nova.data, STR, stdin);
@@ -99,12 +110,6 @@ void cadastrar_multa() {
     fgets(nova.local, STR, stdin);
     nova.local[strcspn(nova.local, "\n")] = 0;
 
-    printf("Valor da multa (R$): ");
-    scanf("%f", &nova.valor);
-
-    printf("Pontuacao na CNH : ");
-    scanf("%d", &nova.pontos);
-
     strcpy(nova.status, "Pendente");
 
     multas[total] = nova;
@@ -113,6 +118,9 @@ void cadastrar_multa() {
 
     salvar_arquivo();
     printf("\nMulta cadastrada com sucesso! (ID: %d)\n", nova.id);
+    printf("Infracao: %s\n", infracao.descricao);
+    printf("Valor: R$ %.2f\n", nova.valor);
+    printf("Pontos: %d\n", nova.pontos);
     pausar();
 }
 
@@ -349,6 +357,7 @@ void carregar_arquivo() {
 
 // Função para exibir os detalhes de uma multa de forma formatada
 void exibir_multa(Multa m) {
+    Infracao inf = obter_infracao(m.tipo_infracao);
     printf("+-------------------------------------------------+\n");
     printf("| ID: %-5d                                       |\n", m.id);
     printf("+-------------------------------------------------+\n");
@@ -356,10 +365,9 @@ void exibir_multa(Multa m) {
     printf("  CPF    : %s\n", m.cpf);
     printf("  CNH    : %s\n", m.cnh);
     printf("  Placa  : %s\n", m.placa);
-    printf("  Codigo : %s\n", m.codigo);
+    printf("  Infracao: %s\n", inf.descricao);
     printf("  Data   : %s\n", m.data);
     printf("  Local  : %s\n", m.local);
-    printf("  Descr. : %s\n", m.descricao);
     printf("  Valor  : R$ %.2f\n", m.valor);
     printf("  Pontos : %d\n", m.pontos);
     printf("  Status : %s\n", m.status);
@@ -395,4 +403,61 @@ int validar_placa(const char *placa) {
     if (placa[6] < '0' || placa[6] > '9')
         return 0;
     return 1;
+}
+
+Infracao obter_infracao(TipoInfracao tipo) {
+    Infracao inf;
+    inf.tipo = tipo;
+    switch (tipo) {
+        case INF_AVANCAR_SEMAFORO_VERMELHO:
+            strcpy(inf.descricao, "Avancar semaforo vermelho");
+            inf.valor = 293.47;
+            inf.pontos = 7;
+            break;
+        case INF_ESTACIONAR_LOCAL_PROIBIDO:
+            strcpy(inf.descricao, "Estacionar em local proibido");
+            inf.valor = 195.23;
+            inf.pontos = 4;
+            break;
+        case INF_EXCESSO_VELOCIDADE_LEVE:
+            strcpy(inf.descricao, "Excesso de velocidade leve");
+            inf.valor = 130.16;
+            inf.pontos = 4;
+            break;
+        case INF_EXCESSO_VELOCIDADE_GRAVE:
+            strcpy(inf.descricao, "Excesso de velocidade grave");
+            inf.valor = 195.23;
+            inf.pontos = 5;
+            break;
+        case INF_DIRIGIR_SEM_CINTO:
+            strcpy(inf.descricao, "Dirigir sem cinto de seguranca");
+            inf.valor = 130.16;
+            inf.pontos = 5;
+            break;
+        case INF_USO_CELULAR_DIRIGINDO:
+            strcpy(inf.descricao, "Uso de celular dirigindo");
+            inf.valor = 293.47;
+            inf.pontos = 7;
+            break;
+        case INF_TRANSPORTAR_CRIAANCAS_SEM_CADEIRINHA:
+            strcpy(inf.descricao, "Transportar criancas sem cadeirinha");
+            inf.valor = 293.47;
+            inf.pontos = 7;
+            break;
+        case INF_DIRIGIR_SEM_HABILITACAO:
+            strcpy(inf.descricao, "Dirigir sem habilitacao");
+            inf.valor = 880.41;
+            inf.pontos = 7;
+            break;
+        case INF_VEICULO_COM_DEFEITO:
+            strcpy(inf.descricao, "Veiculo com defeito");
+            inf.valor = 130.16;
+            inf.pontos = 4;
+            break;
+        default:
+            strcpy(inf.descricao, "Infracao desconhecida");
+            inf.valor = 0.0;
+            inf.pontos = 0;
+    }
+    return inf;
 }
