@@ -40,11 +40,11 @@ all: $(BUILD_DIR) $(DATA_DIR) $(TARGET)
 
 # Cria o diretório build se não existir
 $(BUILD_DIR):
-	@if not exist $(BUILD_DIR) mkdir $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)
 
 # Cria o diretório data se não existir
 $(DATA_DIR):
-	@if not exist $(DATA_DIR) mkdir $(DATA_DIR)
+	mkdir -p $(DATA_DIR)
 
 # Linka os .o e gera o executável final
 $(TARGET): $(OBJS)
@@ -58,8 +58,7 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 
 # Remove os arquivos gerados (clean)
 clean:
-	@if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
-	@if exist $(DATA_DIR) rmdir /s /q $(DATA_DIR)
+	rm -rf $(BUILD_DIR) $(DATA_DIR)
 	@echo Build removido!
 
 # Executa o programa
